@@ -79,6 +79,7 @@ kubectl describe pod -n mlops <pod-name>
 
 ArgoCD was straightforward to set up. I created one Application manifest pointing at this repo, and from that point on every git push syncs the cluster automatically. One challenge, I might change :latest in iris-deployment.yaml into versioned tags so argocd would detect change and re-deploy automatically for now a manual rollout after push.
 
+
 ## 5. Test
 
 ```bash
@@ -86,6 +87,11 @@ curl -X POST http://iris.lan/predict \
   -H "Content-Type: application/json" \
   -d '{"sepal_length": 5.1, "sepal_width": 3.5, "petal_length": 1.4, "petal_width": 0.2}'
 ```
+
+# HomePage
+I added an entry to mlflow in my homepage
+
+![homepage](homepage.png)
 
 # Tools used
 
