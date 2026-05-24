@@ -72,6 +72,13 @@ kubectl describe pod -n mlops <pod-name>
 ![kubectl describe pod mlflow](docs/pod-describe.png)
 ![mlflow training runs screenshot](docs/mlflow-runs.png)
 
+
+# 5. ArgoCd
+
+![Argocd](docs/argocd.png)
+
+ArgoCD was straightforward to set up. I created one Application manifest pointing at this repo, and from that point on every git push syncs the cluster automatically. One challenge, I might change :latest in iris-deployment.yaml into versioned tags so argocd would detect change and re-deploy automatically for now a manual rollout after push.
+
 ## 5. Test
 
 ```bash
