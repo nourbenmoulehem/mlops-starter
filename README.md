@@ -91,7 +91,7 @@ curl -X POST http://iris.lan/predict \
 # HomePage
 I added an entry to mlflow in my homepage
 
-![homepage](homepage.png)
+![homepage](docs/homepage.png)
 
 # Tools used
 
