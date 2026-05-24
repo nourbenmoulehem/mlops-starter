@@ -1,0 +1,102 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mlflow-sqllite
+spec:
+  storageClassName: ""
+  capacity:
+    storage: 8Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: 192.168.1.175
+    path: /srv/nfs/mlflow
+
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mlflow-sqllite
+  namespace: mlops
+spec:
+  storageClassName: ""
+  volumeName: mlflow-sqllite
+  resources:
+    requests:
+      storage: 7Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow
+  namespace: mlops
+spec:
+  selector:
+    matchLabels:
+      app: mlflow
+  template:
+    metadata:
+      labels:
+        app: mlflow
+    spec:
+      containers:
+      - name: mlflow
+        image: ghcr.io/mlflow/mlflow:latest
+        command: ["mlflow"]
+        args:
+          - server
+          - --backend-store-uri=sqlite:////mlflow/mlflow.db
+          - --default-artifact-root=mlflow-artifacts:/0
+          - --artifacts-destination=/mlflow/artifacts
+          - --serve-artifacts
+          - --host=0.0.0.0
+          - --port=5000
+          - --allowed-hosts=*
+          - --workers=1
+          - --cors-allowed-origins=*
+        env:
+          - name: MLFLOW_ALLOWED_HOSTS
+            value: "*"
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+        volumeMounts:
+          - name: mlflow-sqllite
+            mountPath: /mlflow
+        ports:
+        - containerPort: 5000
+      volumes:
+       - name: mlflow-sqllite
+         persistentVolumeClaim:
+           claimName: mlflow-sqllite
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow
+  namespace: mlops
+spec:
+  selector:
+    app: mlflow
+  ports:
+  - port: 5000
+    targetPort: 5000
+
+
+
+
+

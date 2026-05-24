@@ -1,0 +1,29 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: mlflow-ingress
+  namespace: mlops
+  labels:
+    app.kubernetes.io/name: mlflow-ingress
+spec:
+  rules:
+  - host: mlflow.lan
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: mlflow
+            port: 
+              number: 5000
+  - host: iris.lan
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: iris-mlops
+            port: 
+              number: 80

@@ -1,0 +1,56 @@
+
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: iris-mlops
+  namespace: mlops
+  labels:
+    app: iris-mlops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iris-mlops
+  template:
+    metadata:
+      labels:
+        app: iris-mlops
+    spec:
+      initContainers:
+        - name: wait-for-mlflow
+          image: busybox
+          command: ['sh', '-c', 'until nc -z mlflow 5000; do echo waiting for mlflow; sleep 2; done']
+      containers:
+      - name: iris-mlops
+        image: nourbenmoulehom134/iris-mlops:latest
+        env:
+          - name: MLFLOW_TRACKING_URI
+            value: http://mlflow:5000
+        resources:
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+            cpu: "250m"
+        ports:
+        - containerPort: 8000
+
+
+---
+apiVersion: v1
+
+kind: Service
+
+metadata:
+  name: iris-mlops
+  namespace: mlops
+spec:
+  selector:
+    app: iris-mlops
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8000
+
