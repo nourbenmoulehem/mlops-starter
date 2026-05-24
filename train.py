@@ -4,13 +4,16 @@ from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import mlflow
 from mlflow.tracking import MlflowClient
 
 X, y = load_iris(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42
 )
+
+
+# experiment?
+mlflow.set_experiment("iris")
 
 # mlflow tracks everything inside this block
 with mlflow.start_run():
@@ -35,7 +38,7 @@ with mlflow.start_run():
     mlflow.log_metric("accuracy", acc)
 
     # save the model as an artifact
-    mlflow.sklearn.log_model(model, "iris_model")
+    mlflow.sklearn.log_model(model, name="iris_model")
 
     print(f"accuracy: {acc:.3f}")
     print("model saved to mlflow")
@@ -48,9 +51,11 @@ with mlflow.start_run():
 
     # promote it to Production
     client = MlflowClient()
-    client.transition_model_version_stage(
+    
+
+    client.set_registered_model_alias(
         name="iris-classifier",
-        version=registered.version,
-        stage="Production"
+        alias="champion",
+        version=registered.version
     )
     print(f"version {registered.version} promoted to Production")
