@@ -88,6 +88,8 @@ Update: I did it, check the next section.
 I added a github ci pipeline that is triggered on every push that touches Dockerfile or serve.py.
 The pipeline builds the image tagged with the git commit SHA and pushes it to Dockerhub (my account), and then updates the iris-deployment.yaml manifest file with `sed` command to change the image tag, this would trigger argocd to redoply the pod automatically. 
 
+to get the SHA run `git rev-parse --short HEAD`
+
 Github actions is the CI and ArgoCD is the CD, One repo as source of truth for both, COOL. 
 
 ![Github Actions UI](docs/github-actions-ui.png)
