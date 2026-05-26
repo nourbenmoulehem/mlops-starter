@@ -23,7 +23,7 @@ spec:
           command: ['sh', '-c', 'until nc -z mlflow 5000; do echo waiting for mlflow; sleep 2; done']
       containers:
       - name: iris-mlops
-        image: nourbenmoulehom134/iris-mlops:latest
+        image: nourbenmoulehom134/iris-mlops:2e44546
         env:
           - name: MLFLOW_TRACKING_URI
             value: http://mlflow:5000

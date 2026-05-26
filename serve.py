@@ -18,6 +18,8 @@ class IrisInput(BaseModel):
 
 CLASSES = ["setosa", "versicolor", "virginica"]
 
+
+# this is a comment to test ci github actions
 @app.post("/predict")
 def predict(data: IrisInput):
     features = np.array([[
