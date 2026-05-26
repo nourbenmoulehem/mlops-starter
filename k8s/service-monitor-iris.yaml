@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+
+kind: ServiceMonitor
+
+metadata:
+  name: iris-mlops
+  namespace: mlops
+  labels:
+    release: prometheus # prometheus care about SM that has this label
+
+spec:
+  namespaceSelector:
+    matchNames:
+      - mlops
+  selector:
+    matchLabels:
+      app: iris-mlops # Service label
+  endpoints:
+    - port: http
+      path: /metrics
+      interval: 30s
