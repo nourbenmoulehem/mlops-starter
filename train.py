@@ -44,7 +44,7 @@ with mlflow.start_run():
     print("model saved to mlflow")
 
 
-    # after your training run, register the model
+    # after training run, register the model, it would be registered to nfs under /mlflow/artifcats/...
     model_uri = f"runs:/{mlflow.active_run().info.run_id}/iris_model"
 
     registered = mlflow.register_model(model_uri, "iris-classifier")
