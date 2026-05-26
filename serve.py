@@ -19,7 +19,7 @@ class IrisInput(BaseModel):
 CLASSES = ["setosa", "versicolor", "virginica"]
 
 
-# this is a comment to test ci github actions
+# this is a comment to test ci github actions, updating this comment again after fixinf dir name in .github
 @app.post("/predict")
 def predict(data: IrisInput):
     features = np.array([[
