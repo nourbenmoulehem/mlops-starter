@@ -12,7 +12,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 
-# experiment?
+# the group that this training belong to it
 mlflow.set_experiment("iris")
 
 # mlflow tracks everything inside this block
