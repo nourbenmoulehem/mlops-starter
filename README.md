@@ -79,6 +79,18 @@ kubectl describe pod -n mlops <pod-name>
 
 ArgoCD was straightforward to set up. I created one Application manifest pointing at this repo, and from that point on every git push syncs the cluster automatically. One challenge, I might change :latest in iris-deployment.yaml into versioned tags so argocd would detect change and re-deploy automatically for now a manual rollout after push.
 
+Update: I did it, check the next section.
+
+
+
+# 6. Github Action ci pipeline
+
+I added a github ci pipeline that is triggered on every push that touches Dockerfile or serve.py.
+The pipeline builds the image tagged with the git commit SHA and pushes it to Dockerhub (my account), and then updates the iris-deployment.yaml manifest file with `sed` command to change the image tag, this would trigger argocd to redoply the pod automatically. 
+
+Github actions is the CI and ArgoCD is the CD, One repo as source of truth for both, COOL. 
+
+![Github Actions UI](docs/github-actions-ui.png)
 
 ## 5. Test
 
@@ -103,6 +115,9 @@ I added an entry to mlflow in my homepage
 - **Traefik** : ingress controller (built into k3s)
 - **NFS** : persistent storage for MLflow database and artifacts
 - **uv** : Python package and project manager
+- **ArgoCD** : GitOps CD — watches the repo and syncs the cluster on every manifest change
+- **GitHub Actions** : CI pipeline — builds and pushes the image, updates the manifest tag to trigger ArgoCD
+
 
 # Final words
 
